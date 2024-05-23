@@ -47,6 +47,21 @@ const create = async function (req, res) {
   }
 }
 
+const swap = async function (req, res) {
+  try {
+    const restaurant = await Restaurant.findByPk(req.params.restaurantId)
+    if (restaurant.status === 'online') {
+      restaurant.status = 'offline'
+    } else if (restaurant.status === 'offline') {
+      restaurant.status = 'online'
+    }
+    await restaurant.save()
+    res.json(restaurant)
+  } catch (er) {
+    res.status(500).send(er)
+  }
+}
+
 const show = async function (req, res) {
   // Only returns PUBLIC information of restaurants
   try {
@@ -101,6 +116,7 @@ const RestaurantController = {
   create,
   show,
   update,
-  destroy
+  destroy,
+  swap
 }
 export default RestaurantController
